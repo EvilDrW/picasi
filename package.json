@@ -1,0 +1,27 @@
+{
+  "name": "picasi",
+  "version": "1.0.0",
+  "description": "Self-Hosted Photo Website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EvilDrW/picasi.git"
+  },
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/EvilDrW/picasi/issues"
+  },
+  "homepage": "https://github.com/EvilDrW/picasi#readme",
+  "dependencies": {
+    "bluebird": "^3.5.3",
+    "express": "^4.16.4",
+    "fast-exif": "^1.0.1",
+    "mongoose": "^4.13.18",
+    "recursive-readdir": "^2.2.2",
+    "sharp": "^0.21.3"
+  }
+}

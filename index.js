@@ -46,7 +46,13 @@ app.get('/images', (req, res, next) => {
     }
   }
 
-  models.image.find(query).then((images) => {
+  var q = models.image.find(query);
+
+  if (req.query.limit) {
+    q.limit(req.query.limit);
+  }
+
+  q.exec().then((images) => {
     res.send(images.map((img) => {
       return img._id;
     }));
@@ -74,5 +80,7 @@ app.get('/images/:imageID/metadata', (req, res, next) => {
     res.send(image);
   });
 });
+
+app.use(express.static('./static'));
 
 app.listen(80);

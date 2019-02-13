@@ -18,8 +18,8 @@ const gpsExtract = (exifData) => {
   }
 
   return [
-    dms2frac(exifData.gps.GPSLatitude, exifData.gps.GPSLatitudeRef),
-    dms2frac(exifData.gps.GPSLongitude, exifData.gps.GPSLongitudeRef)
+    dms2frac(exifData.gps.GPSLongitude, exifData.gps.GPSLongitudeRef),
+    dms2frac(exifData.gps.GPSLatitude, exifData.gps.GPSLatitudeRef)
   ];
 };
 
@@ -37,7 +37,10 @@ const scanFile = (filename) => {
         make: exifData.image.Make,
         model: exifData.image.Model
       },
-      location: gpsExtract(exifData),
+      location: {
+        type: 'Point',
+        coordinates: gpsExtract(exifData)
+      },
       date: exifData.exif.DateTimeOriginal,
       file: { full: filename }
     };

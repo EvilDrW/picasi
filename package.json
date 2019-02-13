@@ -21,7 +21,9 @@
     "express": "^4.16.4",
     "fast-exif": "^1.0.1",
     "mongoose": "^4.13.18",
+    "mongoose-geojson-schema": "^2.1.3",
     "recursive-readdir": "^2.2.2",
-    "sharp": "^0.21.3"
+    "sharp": "^0.21.3",
+    "supercluster": "^6.0.1"
   }
 }

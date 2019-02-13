@@ -1,5 +1,6 @@
 /* jshint esversion: 6 */
 const mongoose = require('mongoose'),
+      GeoJSON = require('mongoose-geojson-schema'),
       Schema = mongoose.Schema;
 
 var Person = new Schema({
@@ -15,7 +16,7 @@ var Image = new Schema({
     make: { type: String, default: 'unknown' },
     model: { type: String, default: 'unknown' }
   },
-  location: { type: [Number], index: '2d' },
+  location: mongoose.Schema.Types.Point,
   date: { type: Date, required: true },
   faces: [{
     person: { type: Schema.Types.ObjectId, ref: 'Person' },
@@ -27,6 +28,8 @@ var Image = new Schema({
     }
   }]
 });
+
+Image.index({ location: '2dsphere' });
 
 module.exports = (db) => {
   return {

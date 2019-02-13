@@ -9,7 +9,7 @@ const express = require('express'),
 const app = express();
 mongoose.Promise = Promise;
 
-const db = mongoose.createConnection('mongodb://${options.mongoIpAddress}:${options.mongoPort}/${options.mongoDatabase}');
+const db = mongoose.createConnection(`mongodb://${options.mongoIpAddress}:${options.mongoPort}/${options.mongoDatabase}`);
 const models = require('./models.js')(db);
 
 db.dropDatabase().then(() => {
@@ -21,13 +21,29 @@ db.dropDatabase().then(() => {
 });
 
 app.get('/images', (req, res, next) => {
-  var query = { date: {} };
+  var query = {};
 
   if (req.query.datebegin) {
+    query.date = query.date || {};
     query.date.$gte = req.query.datebegin;
   }
   if (req.query.dateend) {
+    query.date = query.date || {};
     query.date.$lte = req.query.dateend;
+  }
+  if (req.query.nearlat && req.query.nearlon) {
+    query.location = {
+      $near: {
+        $geometry: {
+          type: 'Point',
+          coordinates: [req.query.nearlon, req.query.nearlat]
+        }
+      }
+    };
+
+    if (req.query.neardist) {
+      query.location.$maxDistance = req.query.neardist;
+    }
   }
 
   models.image.find(query).then((images) => {

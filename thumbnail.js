@@ -15,7 +15,7 @@ module.exports = (models) => {
       if (!image.file.thumb) {
         var thumbFilename = path.join(options.thumbDirectory, image._id.toString());
 
-        return sharp(image.file.full).resize(320).toBuffer()
+        return sharp(image.file.full).resize(320, 240).toBuffer()
         .then((data) => {
           return fs.writeFileAsync(thumbFilename, data);
         })

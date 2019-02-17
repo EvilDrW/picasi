@@ -1,0 +1,25 @@
+<md-dialog>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <span flex>{{ metadata.file.full }}</span>
+      <md-button class="md-icon-button" ng-click="cancel()">
+        <md-icon md-font-set="material-icons">close</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+
+  <md-dialog-content>
+    <div class="md-dialog-content" layout="row">
+      <div flex="33">
+        <p>Date: {{ metadata.date | date: 'medium' }}</p>
+        <p>Camera: {{ metadata.camera.make }} {{ metadata.camera.model }}</p>
+        <div flex>
+          <leaflet center="{ lat: metadata.location.coordinates[1], lng: metadata.location.coordinates[0], zoom: 12 }" markers="markers" width="250px" height="200px"></leaflet>
+        </div>
+      </div>
+      <div flex>
+        <img ng-src="/images/{{ metadata._id }}" style="width: 100%; height: auto">
+      </div>
+    </div>
+  </md-dialog-content>
+</md-dialog>

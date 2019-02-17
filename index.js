@@ -20,33 +20,37 @@ db.dropDatabase().then(() => {
   }).map((img) => { console.log(img._id); return; }).all();
 });
 
-app.get('/images', (req, res, next) => {
+var buildImageQuery = (urlQuery) => {
   var query = {};
 
-  if (req.query.datebegin) {
+  if (urlQuery.datebegin) {
     query.date = query.date || {};
-    query.date.$gte = req.query.datebegin;
+    query.date.$gte = urlQuery.datebegin;
   }
-  if (req.query.dateend) {
+  if (urlQuery.dateend) {
     query.date = query.date || {};
-    query.date.$lte = req.query.dateend;
+    query.date.$lte = urlQuery.dateend;
   }
-  if (req.query.nearlat && req.query.nearlon) {
+  if (urlQuery.nearlat && urlQuery.nearlon) {
     query.location = {
       $near: {
         $geometry: {
           type: 'Point',
-          coordinates: [req.query.nearlon, req.query.nearlat]
+          coordinates: [urlQuery.nearlon, urlQuery.nearlat]
         }
       }
     };
 
-    if (req.query.neardist) {
-      query.location.$maxDistance = req.query.neardist;
+    if (urlQuery.neardist) {
+      query.location.$maxDistance = urlQuery.neardist;
     }
   }
 
-  var q = models.image.find(query);
+  return query;
+};
+
+app.get('/images', (req, res, next) => {
+  var q = models.image.find(buildImageQuery(req.query));
 
   if (req.query.limit) {
     q.limit(req.query.limit);
@@ -56,6 +60,12 @@ app.get('/images', (req, res, next) => {
     res.send(images.map((img) => {
       return img._id;
     }));
+  });
+});
+
+app.get('/images/count', (req, res, next) => {
+  q.count(buildImageQuery(req.query)).exec().then((cnt) => {
+    res.send(cnt);
   });
 });
 

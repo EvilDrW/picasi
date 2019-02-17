@@ -52,7 +52,7 @@ app.get('/images', (req, res, next) => {
     q.limit(req.query.limit);
   }
 
-  q.exec().then((images) => {
+  q.sort({ date: -1 }).exec().then((images) => {
     res.send(images.map((img) => {
       return img._id;
     }));

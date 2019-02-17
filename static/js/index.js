@@ -9,7 +9,7 @@ app.directive('imageGrid', ($http, $mdDialog, FilterService) => {
     templateUrl: 'directives/imageGrid.html',
     link: (scope, ele, attrs) => {
       FilterService.subscribe('/images', (data) => {
-        $scope.imageIDs = data;
+        scope.imageIDs = data;
       });
 
       scope.showImageDetail = (id) => {
@@ -39,7 +39,7 @@ app.directive('imageGrid', ($http, $mdDialog, FilterService) => {
   };
 });
 
-app.directive('filterSetup', function(FilterService) {
+app.directive('filterSetup', function($mdToast, FilterService) {
   return {
     restrict: 'E',
     templateUrl: 'directives/filterSetup.html',
@@ -52,12 +52,21 @@ app.directive('filterSetup', function(FilterService) {
       };
 
       scope.submit = () => {
-        FilterService.clear();
-        if ($scope.filters.date) {
-          FilterService.set('datebegin', $scope.filters.date.begin.getTime());
-          FilterService.set('dateend', $scope.filters.date.end.getTime());
+        if (scope.filters.date) {
+          FilterService.set({
+            datebegin: scope.filters.date.begin.getTime(),
+            dateend: scope.filters.date.end.getTime()
+          });
         }
       };
+
+      FilterService.subscribe('images/count', (count) => {
+        $mdToast.show(
+          $mdToast.simple()
+          .textContent(`Found ${count} photos`)
+          .position('bottom right')
+          .hideDelay(3000));
+      });
     }
   };
 });
@@ -74,15 +83,11 @@ app.service('FilterService', function($http) {
 
   this.subscribe = (url, cb) => {
     subscribers.push({ url: url, callback: cb });
-    notifySubscriber(subscribers[-1]);
+    notifySubscriber(subscribers[subscribers.length-1]);
   };
 
-  this.clear = () => {
-    filters = {};
-  };
-
-  this.set = (key, val) => {
-    filters[key] = val;
+  this.set = (newFilters) => {
+    filters = newFilters;
     subscribers.forEach(notifySubscriber);
   };
 });

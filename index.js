@@ -64,8 +64,8 @@ app.get('/images', (req, res, next) => {
 });
 
 app.get('/images/count', (req, res, next) => {
-  q.count(buildImageQuery(req.query)).exec().then((cnt) => {
-    res.send(cnt);
+  models.image.count(buildImageQuery(req.query)).exec().then((cnt) => {
+    res.json(cnt);
   });
 });
 

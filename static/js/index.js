@@ -52,12 +52,13 @@ app.directive('filterSetup', function($mdToast, FilterService) {
       };
 
       scope.submit = () => {
+        var f = {};
         if (scope.filters.date) {
-          FilterService.set({
-            datebegin: scope.filters.date.begin.getTime(),
-            dateend: scope.filters.date.end.getTime()
-          });
+          f.datebegin = scope.filters.date.begin.getTime();
+          f.dateend = scope.filters.date.end.getTime();
         }
+
+        FilterService.set(f);
       };
 
       FilterService.subscribe('images/count', (count) => {

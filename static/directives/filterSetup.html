@@ -1,0 +1,36 @@
+<md-content layout-padding>
+  <md-list>
+    <md-list-item>
+      <md-switch ng-model="filters.location.enabled" ng-disabled="true">Filter by Location</md-switch>
+    </md-list-item>
+    <md-divider></md-divider>
+
+    <md-list-item>
+      <md-switch ng-model="filters.date.enabled">Filter by Date</md-switch>
+    </md-list-item>
+
+    <md-list-item ng-show="filters.date.enabled">
+      <div layout-gt-xs="row">
+        <div flex-gt-xs>
+          <h4>From</h4>
+          <md-datepicker ng-model="filters.date.begin"></md-datepicker>
+        </div>
+      </div>
+    </md-list-item>
+
+    <md-list-item ng-show="filters.date.enabled">
+      <div layout-gt-xs="row">
+        <div flex-gt-xs>
+          <h4>To</h4>
+          <md-datepicker ng-model="filters.date.end"></md-datepicker>
+        </div>
+      </div>
+    </md-list-item>
+    <md-divider></md-divider>
+
+    <md-list-item>
+      <md-switch ng-model="filters.faces.enabled" ng-disabled="true">Filter by People</md-switch>
+    </md-list-item>
+  </md-list>
+  <md-button class="md-primary md-raised" ng-click="submit()">Apply Filters</md-button>
+</md-content>

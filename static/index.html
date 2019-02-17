@@ -35,19 +35,15 @@
   </md-toolbar>
 
   <div class="container" layout="row">
-    <md-card ng-show="mapIsOpen" flex>
-      <md-card-content>
-        <div class="md-media-xl card-media"></div>
-        <leaflet height="200px" width="100%"></leaflet>
-      </md-card-content>
-    </md-card>
+    <div layout="column" flex>
+      <md-card ng-show="mapIsOpen">
+        <md-card-content>
+          <div class="md-media-xl card-media"></div>
+          <leaflet height="200px" width="100%"></leaflet>
+        </md-card-content>
+      </md-card>
 
-    <div ng-controller="TestCtrl" flex layout-padding>
-      <md-grid-list md-cols="8" md-gutter="12px" md-row-height="200px">
-        <md-grid-tile ng-repeat="id in imageIDs">
-          <a ng-click="showImageDetail(id)"><img ng-src="/images/{{ id }}/thumbnail" layout-fill></a>
-        </md-grid-tile>
-      </md-grid-list>
+      <image-grid flex></image-grid>
     </div>
 
     <md-sidenav
@@ -56,42 +52,7 @@
         md-is-open="filterIsOpen"
         md-whiteframe="4">
 
-      <md-content ng-controller="FilterController" layout-padding>
-        <md-list>
-          <md-list-item>
-            <md-switch ng-model="filters.location.enabled" ng-disabled="true">Filter by Location</md-switch>
-          </md-list-item>
-          <md-divider></md-divider>
-
-          <md-list-item>
-            <md-switch ng-model="filters.date.enabled">Filter by Date</md-switch>
-          </md-list-item>
-
-          <md-list-item ng-show="filters.date.enabled">
-            <div layout-gt-xs="row">
-              <div flex-gt-xs>
-                <h4>From</h4>
-                <md-datepicker ng-model="filters.date.begin"></md-datepicker>
-              </div>
-            </div>
-          </md-list-item>
-
-          <md-list-item ng-show="filters.date.enabled">
-            <div layout-gt-xs="row">
-              <div flex-gt-xs>
-                <h4>To</h4>
-                <md-datepicker ng-model="filters.date.end"></md-datepicker>
-              </div>
-            </div>
-          </md-list-item>
-          <md-divider></md-divider>
-
-          <md-list-item>
-            <md-switch ng-model="filters.faces.enabled" ng-disabled="true">Filter by People</md-switch>
-          </md-list-item>
-        </md-list>
-        <md-button class="md-primary md-raised" ng-click="submit()">Apply Filters</md-button>
-      </md-content>
+      <filter-setup></filter-setup>
     </md-sidenav>
   </div>
 

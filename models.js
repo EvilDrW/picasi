@@ -20,12 +20,13 @@ var Image = new Schema({
   date: { type: Date, required: true },
   faces: [{
     person: { type: Schema.Types.ObjectId, ref: 'Person' },
-    pixels: {
+    box: {
       x: { type: Number, required: true },
       y: { type: Number, required: true },
       width: { type: Number, required: true },
       height: { type: Number, required: true }
-    }
+    },
+    descriptor: { type: [Number], required: true, minlength: 128, maxlength: 128 }
   }]
 });
 

@@ -2,7 +2,8 @@
 const Promise = require('bluebird'),
       recursive = Promise.promisify(require('recursive-readdir')),
       path = require('path'),
-      exif = require('fast-exif');
+      exif = require('fast-exif'),
+      faceDetect = require('./faceDetect.js');
 
 const dms2frac = (val, ref) => {
   return invertGps(ref) * (val[0] + val[1] / 60 + val[2] / 3600);
@@ -24,7 +25,10 @@ const gpsExtract = (exifData) => {
 };
 
 const scanFile = (filename) => {
-  return exif.read(filename).then((exifData) => {
+  return Promise.join(
+    exif.read(filename),
+    faceDetect(filename),
+  (exifData, faceData) => {
     if (!exifData) {
       return {
         file: { full: filename },
@@ -42,7 +46,8 @@ const scanFile = (filename) => {
         coordinates: gpsExtract(exifData)
       },
       date: exifData.exif.DateTimeOriginal,
-      file: { full: filename }
+      file: { full: filename },
+      faces: faceData
     };
   });
 };
@@ -56,7 +61,7 @@ module.exports = {
 
       return (extension == '.jpg') || (extension == '.jpeg');
     })
-    .map(scanFile);
+    .mapSeries(scanFile);
   },
   file: scanFile
 };

@@ -13,11 +13,13 @@ const db = mongoose.createConnection(`mongodb://${options.mongoIpAddress}:${opti
 const models = require('./models.js')(db);
 
 db.dropDatabase().then(() => {
-  scan.directory(options.imageDirectory).map((data) => {
+  scan.directory(options.imageDirectory).mapSeries((data) => {
     var image = new models.image(data);
 
     return image.save();
-  }).map((img) => { console.log(img._id); return; }).all();
+  }).mapSeries((data) => {
+    return thumbnail(data);
+  }).all();
 });
 
 var buildImageQuery = (urlQuery) => {
@@ -79,7 +81,15 @@ app.get('/images/:imageID', (req, res, next) => {
   });
 });
 
-app.get('/images/:imageID/thumbnail', thumbnail(models));
+app.get('/images/:imageID/thumbnail', (req, res, next) => {
+  models.image.findById(req.params.imageID).then((image) => {
+    if (!image) {
+      return res.status(404);
+    }
+
+    res.sendFile(image.file.thumb);
+  });
+});
 
 app.get('/images/:imageID/metadata', (req, res, next) => {
   models.image.findById(req.params.imageID).then((image) => {

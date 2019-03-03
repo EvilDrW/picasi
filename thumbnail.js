@@ -5,33 +5,19 @@ const Promise = require('bluebird'),
       sharp = require('sharp'),
       options = require('./options.json');
 
-module.exports = (models) => {
-  return (req, res, next) => {
-    models.image.findById(req.params.imageID).then((image) => {
-      if (!image) {
-        return res.status(404);
-      }
+module.exports = (image) => {
+  console.log(image);
+  if (!image.file.thumb) {
+    console.log('creating thumbnail for', options.thumbDirectory, image._id, image.file.full);
+    var thumbFilename = path.join(options.thumbDirectory, image._id.toString() + '.jpg');
 
-      if (!image.file.thumb) {
-        var thumbFilename = path.join(options.thumbDirectory, image._id.toString());
+    return sharp(image.file.full).resize(320, 240).toFile(thumbFilename)
+    .then(() => {
+      image.file.thumb = thumbFilename;
 
-        return sharp(image.file.full).resize(320, 240).toBuffer()
-        .then((data) => {
-          return fs.writeFileAsync(thumbFilename, data);
-        })
-        .then(() => {
-          image.file.thumb = thumbFilename;
-          return image.save();
-        })
-        .then(() => {
-          return image.file.thumb;
-        });
-      }
-
-      return image.file.thumb;
-    })
-    .then((filename) => {
-      res.sendFile(filename);
+      return image.save();
     });
-  };
+  }
+
+  return image;
 };

@@ -27,10 +27,35 @@ app.directive('imageGrid', ($http, $mdDialog, FilterService) => {
                 }
               };
 
-              $scope.cancel = () => {
-                $mdDialog.cancel();
+              var c = document.getElementById("photoCanvas");
+              var ctx = c.getContext("2d");
+              var img = new Image();
+              var scale;
+
+              img.src = `/images/${$scope.metadata._id}`;
+              img.onload = () => {
+                scale = c.width / img.width;
+                c.height = img.height * scale;
+                ctx.drawImage(img, 0, 0, img.width * scale, img.height * scale);
+
+                for (var j = 0; j < $scope.metadata.faces.length; j++) {
+                  $scope.showFaceBox(j);
+                }
+              };
+
+              $scope.showFaceBox = (index) => {
+                var faceBox = $scope.metadata.faces[index].box;
+                Object.keys(faceBox).forEach((key) => {
+                  faceBox[key] *= scale;
+                });
+
+                ctx.strokeRect(faceBox.x, faceBox.y, faceBox.width, faceBox.height);
               };
             });
+
+            $scope.cancel = () => {
+              $mdDialog.cancel();
+            };
           },
           templateUrl: 'directives/imagePanel.html'
         });

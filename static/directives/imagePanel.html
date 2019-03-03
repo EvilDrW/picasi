@@ -1,4 +1,4 @@
-<md-dialog>
+<md-dialog style="width: 100%">
   <md-toolbar>
     <div class="md-toolbar-tools">
       <span flex>{{ metadata.file.full }}</span>
@@ -10,7 +10,7 @@
 
   <md-dialog-content>
     <div class="md-dialog-content" layout="row">
-      <div flex="33">
+      <div style="margin-right: 15px">
         <p>Date: {{ metadata.date | date: 'medium' }}</p>
         <p>Camera: {{ metadata.camera.make }} {{ metadata.camera.model }}</p>
         <div flex>
@@ -18,7 +18,7 @@
         </div>
       </div>
       <div flex>
-        <img ng-src="/images/{{ metadata._id }}" style="width: 100%; height: auto">
+        <canvas id="photoCanvas" style="width: 100%; height: auto"></canvas>
       </div>
     </div>
   </md-dialog-content>

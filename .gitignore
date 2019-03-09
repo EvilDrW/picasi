@@ -76,3 +76,8 @@ typings/
 .fusebox/
 options.json
 models/
+static/js/angular*.js
+static/css/angular-material.min.css
+static/css/leaflet.css
+static/fonts/*
+static/js/leaflet.js
